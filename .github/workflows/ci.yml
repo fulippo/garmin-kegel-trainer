@@ -22,9 +22,9 @@ jobs:
 
       - name: Download Connect IQ SDK
         run: |
-          SDK_VERSION="7.3.1"
-          SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/connectiq-sdk-lin-${SDK_VERSION}-2024-09-26-f221bc283.zip"
-          curl -L -o sdk.zip "$SDK_URL"
+          SDK_FILE="connectiq-sdk-lin-8.4.0-2025-12-03-5122605dc.zip"
+          SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/${SDK_FILE}"
+          curl -fSL -o sdk.zip "$SDK_URL"
           unzip -q sdk.zip -d connectiq-sdk
           echo "SDK_HOME=$(pwd)/connectiq-sdk" >> $GITHUB_ENV
 
