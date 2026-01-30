@@ -7,6 +7,16 @@
       "bump-patch-for-minor-pre-major": true,
       "extra-files": [
         "manifest.xml"
+      ],
+      "exclude-paths": [
+        ".github",
+        ".gitignore",
+        "CLAUDE.md",
+        "README.md",
+        "LICENSE",
+        "Makefile",
+        "release-please-config.json",
+        ".release-please-manifest.json"
       ]
     }
   }
