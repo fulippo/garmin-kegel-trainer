@@ -1,0 +1,27 @@
+# Build outputs
+bin/
+*.prg
+*.iq
+
+# Developer key (keep private!)
+developer_key.der
+*.der
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Garmin SDK cache
+.connectiq/
+
+# Temporary files
+*.tmp
+*.bak

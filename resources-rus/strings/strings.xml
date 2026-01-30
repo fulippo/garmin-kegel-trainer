@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">Тренер Кегеля</string>
+    <string id="AppTitle1">КЕГЕЛЬ</string>
+    <string id="AppTitle2">ТРЕНЕР</string>
+    <string id="Contract">СЖАТЬ</string>
+    <string id="Relax">РАССЛАБИТЬ</string>
+    <string id="Ready">ГОТОВ</string>
+    <string id="GetReady">ПРИГОТОВЬТЕСЬ</string>
+    <string id="Complete">ЗАВЕРШЕНО!</string>
+    <string id="PressStart">Нажмите СТАРТ</string>
+    <string id="Rep">Повт</string>
+    <string id="Of">из</string>
+    <string id="Series">Серия</string>
+    <string id="GreatJob">Отличная работа!</string>
+    <string id="Instructions">НАЗАД для выхода</string>
+    <string id="SaveWorkout">Сохранить тренировку?</string>
+    <string id="SettingRepsTitle">Повторений в серии</string>
+    <string id="SettingSeriesTitle">Количество серий</string>
+    <string id="SettingContractTitle">Время сокращения (сек)</string>
+    <string id="SettingRelaxTitle">Время расслабления (сек)</string>
+</strings>

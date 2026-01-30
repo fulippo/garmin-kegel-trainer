@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">Kegel-trener</string>
+    <string id="AppTitle1">KEGEL</string>
+    <string id="AppTitle2">TRENER</string>
+    <string id="Contract">STRAM</string>
+    <string id="Relax">SLAPP AV</string>
+    <string id="Ready">KLAR</string>
+    <string id="GetReady">GJØR DEG KLAR</string>
+    <string id="Complete">FULLFØRT!</string>
+    <string id="PressStart">Trykk START</string>
+    <string id="Rep">Rep</string>
+    <string id="Of">av</string>
+    <string id="Series">Serie</string>
+    <string id="GreatJob">Bra jobbet!</string>
+    <string id="Instructions">TILBAKE for å avslutte</string>
+    <string id="SaveWorkout">Lagre trening?</string>
+    <string id="SettingRepsTitle">Repetisjoner per serie</string>
+    <string id="SettingSeriesTitle">Antall serier</string>
+    <string id="SettingContractTitle">Kontraksjonstid (sek)</string>
+    <string id="SettingRelaxTitle">Avslappingstid (sek)</string>
+</strings>

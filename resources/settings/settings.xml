@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+    <setting propertyKey="@Properties.repsPerSeries" title="@Strings.SettingRepsTitle">
+        <settingConfig type="numeric" min="1" max="50" />
+    </setting>
+
+    <setting propertyKey="@Properties.numSeries" title="@Strings.SettingSeriesTitle">
+        <settingConfig type="numeric" min="1" max="10" />
+    </setting>
+
+    <setting propertyKey="@Properties.contractTime" title="@Strings.SettingContractTitle">
+        <settingConfig type="numeric" min="1" max="60" />
+    </setting>
+
+    <setting propertyKey="@Properties.relaxTime" title="@Strings.SettingRelaxTitle">
+        <settingConfig type="numeric" min="1" max="60" />
+    </setting>
+</settings>

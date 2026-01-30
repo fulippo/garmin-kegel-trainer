@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">케겔 트레이너</string>
+    <string id="AppTitle1">케겔</string>
+    <string id="AppTitle2">트레이너</string>
+    <string id="Contract">수축</string>
+    <string id="Relax">이완</string>
+    <string id="Ready">준비</string>
+    <string id="GetReady">준비하세요</string>
+    <string id="Complete">완료!</string>
+    <string id="PressStart">시작 누르기</string>
+    <string id="Rep">회</string>
+    <string id="Of">/</string>
+    <string id="Series">세트</string>
+    <string id="GreatJob">잘했어요!</string>
+    <string id="Instructions">뒤로 눌러 종료</string>
+    <string id="SaveWorkout">운동 저장?</string>
+    <string id="SettingRepsTitle">세트당 반복 횟수</string>
+    <string id="SettingSeriesTitle">세트 수</string>
+    <string id="SettingContractTitle">수축 시간 (초)</string>
+    <string id="SettingRelaxTitle">휴식 시간 (초)</string>
+</strings>

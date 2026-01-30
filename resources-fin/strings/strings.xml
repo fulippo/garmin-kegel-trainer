@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">Kegel-harjoittelija</string>
+    <string id="AppTitle1">KEGEL</string>
+    <string id="AppTitle2">HARJOITTELIJA</string>
+    <string id="Contract">SUPISTA</string>
+    <string id="Relax">RENTOUDU</string>
+    <string id="Ready">VALMIS</string>
+    <string id="GetReady">VALMISTAUDU</string>
+    <string id="Complete">VALMIS!</string>
+    <string id="PressStart">Paina ALOITA</string>
+    <string id="Rep">Toisto</string>
+    <string id="Of">/</string>
+    <string id="Series">Sarja</string>
+    <string id="GreatJob">Hyvää työtä!</string>
+    <string id="Instructions">TAKAISIN poistuaksesi</string>
+    <string id="SaveWorkout">Tallenna harjoitus?</string>
+    <string id="SettingRepsTitle">Toistoja per sarja</string>
+    <string id="SettingSeriesTitle">Sarjojen määrä</string>
+    <string id="SettingContractTitle">Supistusaika (sek)</string>
+    <string id="SettingRelaxTitle">Rentoutusaika (sek)</string>
+</strings>

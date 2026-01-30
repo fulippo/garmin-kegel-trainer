@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">凯格尔训练器</string>
+    <string id="AppTitle1">凯格尔</string>
+    <string id="AppTitle2">训练器</string>
+    <string id="Contract">收缩</string>
+    <string id="Relax">放松</string>
+    <string id="Ready">准备</string>
+    <string id="GetReady">准备好</string>
+    <string id="Complete">完成！</string>
+    <string id="PressStart">按开始</string>
+    <string id="Rep">次</string>
+    <string id="Of">/</string>
+    <string id="Series">组</string>
+    <string id="GreatJob">做得好！</string>
+    <string id="Instructions">返回退出</string>
+    <string id="SaveWorkout">保存训练?</string>
+    <string id="SettingRepsTitle">每组重复次数</string>
+    <string id="SettingSeriesTitle">组数</string>
+    <string id="SettingContractTitle">收缩时间 (秒)</string>
+    <string id="SettingRelaxTitle">休息时间 (秒)</string>
+</strings>

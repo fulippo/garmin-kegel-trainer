@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">Kegelův trenér</string>
+    <string id="AppTitle1">KEGEL</string>
+    <string id="AppTitle2">TRENÉR</string>
+    <string id="Contract">STÁHNOUT</string>
+    <string id="Relax">UVOLNIT</string>
+    <string id="Ready">PŘIPRAVEN</string>
+    <string id="GetReady">PŘIPRAVTE SE</string>
+    <string id="Complete">HOTOVO!</string>
+    <string id="PressStart">Stiskněte START</string>
+    <string id="Rep">Opak</string>
+    <string id="Of">z</string>
+    <string id="Series">Série</string>
+    <string id="GreatJob">Skvělá práce!</string>
+    <string id="Instructions">ZPĚT pro ukončení</string>
+    <string id="SaveWorkout">Uložit cvičení?</string>
+    <string id="SettingRepsTitle">Opakování na sérii</string>
+    <string id="SettingSeriesTitle">Počet sérií</string>
+    <string id="SettingContractTitle">Čas kontrakce (sek)</string>
+    <string id="SettingRelaxTitle">Čas relaxace (sek)</string>
+</strings>

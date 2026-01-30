@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<properties>
+    <property id="repsPerSeries" type="number">10</property>
+    <property id="numSeries" type="number">1</property>
+    <property id="contractTime" type="number">10</property>
+    <property id="relaxTime" type="number">5</property>
+</properties>

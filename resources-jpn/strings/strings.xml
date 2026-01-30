@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">ケーゲルトレーナー</string>
+    <string id="AppTitle1">ケーゲル</string>
+    <string id="AppTitle2">トレーナー</string>
+    <string id="Contract">収縮</string>
+    <string id="Relax">リラックス</string>
+    <string id="Ready">準備</string>
+    <string id="GetReady">準備して</string>
+    <string id="Complete">完了！</string>
+    <string id="PressStart">スタートを押す</string>
+    <string id="Rep">回</string>
+    <string id="Of">/</string>
+    <string id="Series">セット</string>
+    <string id="GreatJob">よくできました！</string>
+    <string id="Instructions">戻るで終了</string>
+    <string id="SaveWorkout">保存しますか?</string>
+    <string id="SettingRepsTitle">セットあたりの回数</string>
+    <string id="SettingSeriesTitle">セット数</string>
+    <string id="SettingContractTitle">収縮時間 (秒)</string>
+    <string id="SettingRelaxTitle">休憩時間 (秒)</string>
+</strings>

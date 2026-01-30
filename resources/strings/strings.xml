@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <string id="AppName">Kegel Trainer</string>
+    <string id="AppTitle1">KEGEL</string>
+    <string id="AppTitle2">TRAINER</string>
+    <string id="Contract">CONTRACT</string>
+    <string id="Relax">RELAX</string>
+    <string id="Ready">READY</string>
+    <string id="GetReady">GET READY</string>
+    <string id="Complete">COMPLETE!</string>
+    <string id="PressStart">Press START</string>
+    <string id="Rep">Rep</string>
+    <string id="Of">of</string>
+    <string id="Series">Series</string>
+    <string id="GreatJob">Great Job!</string>
+    <string id="Instructions">BACK to exit</string>
+    <string id="SaveWorkout">Save workout?</string>
+    <string id="SettingRepsTitle">Reps per series</string>
+    <string id="SettingSeriesTitle">Number of series</string>
+    <string id="SettingContractTitle">Contract time (sec)</string>
+    <string id="SettingRelaxTitle">Relax time (sec)</string>
+</strings>
