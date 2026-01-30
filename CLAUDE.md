@@ -84,6 +84,11 @@ Manual commands:
 
 ## Git Conventions
 
+### Workflow
+- **Never push directly to main.** Always create a branch and open a PR.
+- Use `gh` CLI with the `fulippo` GitHub account.
+- Do not add `Co-Authored-By` signatures to commits.
+
 ### Commit Messages
 This project uses [Conventional Commits](https://www.conventionalcommits.org/). Format:
 
@@ -91,8 +96,6 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/). 
 <type>(<scope>): <description>
 
 [optional body]
-
-[optional footer(s)]
 ```
 
 **Types:**
