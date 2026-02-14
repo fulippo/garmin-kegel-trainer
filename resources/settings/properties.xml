@@ -4,4 +4,7 @@
     <property id="numSeries" type="number">1</property>
     <property id="contractTime" type="number">10</property>
     <property id="relaxTime" type="number">5</property>
+    <property id="activityName" type="string">Kegel</property>
+    <property id="activityType" type="number">0</property>
+    <property id="disableRecording" type="boolean">false</property>
 </properties>

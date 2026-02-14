@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">Antal serier</string>
     <string id="SettingContractTitle">Kontraktionstid (sek)</string>
     <string id="SettingRelaxTitle">Avslappningstid (sek)</string>
+    <string id="SettingActivityNameTitle">Aktivitetsnamn</string>
+        <string id="SettingActivityTypeTitle">Aktivitetstyp</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">Inaktivera inspelning</string>
 </strings>

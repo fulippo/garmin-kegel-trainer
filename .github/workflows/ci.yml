@@ -20,13 +20,28 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Download Connect IQ SDK
+      - name: Install Connect IQ SDK Manager
         run: |
-          SDK_FILE="connectiq-sdk-lin-8.4.0-2025-12-03-5122605dc.zip"
-          SDK_URL="https://developer.garmin.com/downloads/connect-iq/sdks/${SDK_FILE}"
-          curl -fSL -o sdk.zip "$SDK_URL"
-          unzip -q sdk.zip -d connectiq-sdk
-          echo "SDK_HOME=$(pwd)/connectiq-sdk" >> $GITHUB_ENV
+          curl -sL https://raw.githubusercontent.com/lindell/connect-iq-sdk-manager-cli/master/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Accept SDK agreement
+        run: |
+          HASH=$(connect-iq-sdk-manager agreement view 2>&1 | grep -i 'hash' | sed 's/.*: //')
+          connect-iq-sdk-manager agreement accept -H "$HASH"
+
+      - name: Login to Garmin
+        env:
+          GARMIN_USERNAME: ${{ secrets.GARMIN_USERNAME }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+        run: |
+          connect-iq-sdk-manager login
+
+      - name: Download Connect IQ SDK and devices
+        run: |
+          connect-iq-sdk-manager sdk set 8.4.0
+          connect-iq-sdk-manager device download -m manifest.xml
+          echo "SDK_HOME=$(connect-iq-sdk-manager sdk current-path)" >> $GITHUB_ENV
 
       - name: Set up developer key
         run: |

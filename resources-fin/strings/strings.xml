@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">Sarjojen määrä</string>
     <string id="SettingContractTitle">Supistusaika (sek)</string>
     <string id="SettingRelaxTitle">Rentoutusaika (sek)</string>
+    <string id="SettingActivityNameTitle">Aktiviteetin nimi</string>
+        <string id="SettingActivityTypeTitle">Aktiviteettityyppi</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">Poista tallennus käytöstä</string>
 </strings>

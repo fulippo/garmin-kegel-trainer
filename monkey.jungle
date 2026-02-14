@@ -1,2 +1,4 @@
 # Build configuration for Kegel Trainer
 project.manifest = manifest.xml
+base.sourcePath = source
+base.resourcePath = resources

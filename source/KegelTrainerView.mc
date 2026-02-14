@@ -32,6 +32,9 @@ class KegelTrainerView extends Ui.View {
     private var _relaxTime as Lang.Number = 5;
     private var _repsPerSeries as Lang.Number = 10;
     private var _numSeries as Lang.Number = 1;
+    private var _activityName as Lang.String = "Kegel";
+    private var _activityType as Lang.Number = 0;
+    private var _disableRecording as Lang.Boolean = false;
 
     // State variables
     private var _state as Lang.Number;
@@ -59,6 +62,9 @@ class KegelTrainerView extends Ui.View {
         _numSeries = Properties.getValue("numSeries") as Lang.Number;
         _contractTime = Properties.getValue("contractTime") as Lang.Number;
         _relaxTime = Properties.getValue("relaxTime") as Lang.Number;
+        _activityName = Properties.getValue("activityName") as Lang.String;
+        _activityType = Properties.getValue("activityType") as Lang.Number;
+        _disableRecording = Properties.getValue("disableRecording") as Lang.Boolean;
     }
 
     //! Called when the view is brought to the foreground
@@ -95,12 +101,38 @@ class KegelTrainerView extends Ui.View {
 
     //! Start activity recording session (keeps display active)
     private function startSession() {
+        if (_disableRecording) {
+            if (Attention has :backlight) {
+                Attention.backlight(true);
+            }
+            return;
+        }
+
         if (Toybox has :ActivityRecording) {
             if (_session == null || !_session.isRecording()) {
+                var sport = Activity.SPORT_TRAINING;
+                var subSport = Activity.SUB_SPORT_BREATHING;
+
+                switch (_activityType) {
+                    case 1:
+                        subSport = Activity.SUB_SPORT_YOGA;
+                        break;
+                    case 2:
+                        subSport = Activity.SUB_SPORT_CARDIO_TRAINING;
+                        break;
+                    case 3:
+                        subSport = Activity.SUB_SPORT_FLEXIBILITY_TRAINING;
+                        break;
+                    case 4:
+                        sport = Activity.SPORT_GENERIC;
+                        subSport = Activity.SUB_SPORT_GENERIC;
+                        break;
+                }
+
                 _session = ActivityRecording.createSession({
-                    :name => "Kegel",
-                    :sport => Activity.SPORT_TRAINING,
-                    :subSport => Activity.SUB_SPORT_BREATHING
+                    :name => _activityName,
+                    :sport => sport,
+                    :subSport => subSport
                 });
                 _session.start();
             }
@@ -151,6 +183,11 @@ class KegelTrainerView extends Ui.View {
         if (_state == STATE_COUNTDOWN || _state == STATE_CONTRACT || _state == STATE_RELAX) {
             _timeRemaining--;
 
+            // Keep display on when recording is disabled
+            if (_disableRecording && (Attention has :backlight)) {
+                Attention.backlight(true);
+            }
+
             if (_timeRemaining <= 0) {
                 transitionState();
             }
@@ -175,18 +212,20 @@ class KegelTrainerView extends Ui.View {
                     _state = STATE_COMPLETE;
                     stopTimer();
                     doVibrateComplete();
-                    showSaveConfirmation();
+                    if (!_disableRecording) {
+                        showSaveConfirmation();
+                    }
                 } else {
                     // Move to relax before next series
                     _state = STATE_RELAX;
                     _timeRemaining = _relaxTime;
-                    doVibrate();
+                    doVibrateRelax();
                 }
             } else {
                 // Move to relax phase
                 _state = STATE_RELAX;
                 _timeRemaining = _relaxTime;
-                doVibrate();
+                doVibrateRelax();
             }
         } else if (_state == STATE_RELAX) {
             // Finished relaxation
@@ -204,10 +243,22 @@ class KegelTrainerView extends Ui.View {
         }
     }
 
-    //! Trigger a short vibration for state changes
+    //! Trigger a single short vibration for contraction
     private function doVibrate() {
         if (Attention has :vibrate) {
             var vibeData = [new Attention.VibeProfile(50, 200)];
+            Attention.vibrate(vibeData);
+        }
+    }
+
+    //! Trigger two short vibrations for relax
+    private function doVibrateRelax() {
+        if (Attention has :vibrate) {
+            var vibeData = [
+                new Attention.VibeProfile(50, 200),
+                new Attention.VibeProfile(0, 100),
+                new Attention.VibeProfile(50, 200)
+            ];
             Attention.vibrate(vibeData);
         }
     }

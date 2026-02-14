@@ -15,4 +15,22 @@
     <setting propertyKey="@Properties.relaxTime" title="@Strings.SettingRelaxTitle">
         <settingConfig type="numeric" min="1" max="60" />
     </setting>
+
+    <setting propertyKey="@Properties.activityName" title="@Strings.SettingActivityNameTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+
+    <setting propertyKey="@Properties.activityType" title="@Strings.SettingActivityTypeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.ActivityTypeBreathing</listEntry>
+            <listEntry value="1">@Strings.ActivityTypeYoga</listEntry>
+            <listEntry value="2">@Strings.ActivityTypeCardio</listEntry>
+            <listEntry value="3">@Strings.ActivityTypeFlexibility</listEntry>
+            <listEntry value="4">@Strings.ActivityTypeGeneral</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.disableRecording" title="@Strings.SettingDisableRecordingTitle">
+        <settingConfig type="boolean" />
+    </setting>
 </settings>

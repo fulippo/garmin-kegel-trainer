@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">Liczba serii</string>
     <string id="SettingContractTitle">Czas skurczu (sek)</string>
     <string id="SettingRelaxTitle">Czas relaksu (sek)</string>
+    <string id="SettingActivityNameTitle">Nazwa aktywności</string>
+        <string id="SettingActivityTypeTitle">Typ aktywności</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">Wyłącz nagrywanie</string>
 </strings>

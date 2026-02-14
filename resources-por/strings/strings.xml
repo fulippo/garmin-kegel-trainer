@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">Número de séries</string>
     <string id="SettingContractTitle">Tempo contração (seg)</string>
     <string id="SettingRelaxTitle">Tempo relaxamento (seg)</string>
+    <string id="SettingActivityNameTitle">Nome da atividade</string>
+        <string id="SettingActivityTypeTitle">Tipo de atividade</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">Desativar gravação</string>
 </strings>
