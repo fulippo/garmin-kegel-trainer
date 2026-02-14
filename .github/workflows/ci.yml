@@ -27,16 +27,21 @@ jobs:
 
       - name: Accept SDK agreement
         run: |
-          connect-iq-sdk-manager agreement accept --acceptance-hash=$(connect-iq-sdk-manager agreement view --acceptance-hash-only)
+          HASH=$(connect-iq-sdk-manager agreement view 2>&1 | grep -i 'hash' | sed 's/.*: //')
+          connect-iq-sdk-manager agreement accept -H "$HASH"
 
-      - name: Download Connect IQ SDK and devices
+      - name: Login to Garmin
         env:
           GARMIN_USERNAME: ${{ secrets.GARMIN_USERNAME }}
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
         run: |
+          connect-iq-sdk-manager login
+
+      - name: Download Connect IQ SDK and devices
+        run: |
           connect-iq-sdk-manager sdk set 8.4.0
-          connect-iq-sdk-manager device download --manifest=manifest.xml
-          echo "SDK_HOME=$HOME/.Garmin/ConnectIQ/Sdks/current" >> $GITHUB_ENV
+          connect-iq-sdk-manager device download -m manifest.xml
+          echo "SDK_HOME=$(connect-iq-sdk-manager sdk current-path)" >> $GITHUB_ENV
 
       - name: Set up developer key
         run: |
