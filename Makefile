@@ -41,6 +41,7 @@ simulator:
 run: build
 	$(MONKEYDO) $(BIN_DIR)/$(APP_NAME).prg $(DEVICE)
 
+
 # Build release version (.iq file for distribution)
 release: $(BIN_DIR)
 	$(MONKEYC) \

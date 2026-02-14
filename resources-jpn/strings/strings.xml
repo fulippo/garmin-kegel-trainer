@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">セット数</string>
     <string id="SettingContractTitle">収縮時間 (秒)</string>
     <string id="SettingRelaxTitle">休憩時間 (秒)</string>
+    <string id="SettingActivityNameTitle">アクティビティ名</string>
+        <string id="SettingActivityTypeTitle">アクティビティの種類</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">記録を無効にする</string>
 </strings>

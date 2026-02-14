@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">Aantal series</string>
     <string id="SettingContractTitle">Contractietijd (sec)</string>
     <string id="SettingRelaxTitle">Ontspanningstijd (sec)</string>
+    <string id="SettingActivityNameTitle">Activiteitsnaam</string>
+        <string id="SettingActivityTypeTitle">Activiteitstype</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">Opname uitschakelen</string>
 </strings>

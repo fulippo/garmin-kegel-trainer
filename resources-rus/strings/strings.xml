@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">Количество серий</string>
     <string id="SettingContractTitle">Время сокращения (сек)</string>
     <string id="SettingRelaxTitle">Время расслабления (сек)</string>
+    <string id="SettingActivityNameTitle">Название активности</string>
+        <string id="SettingActivityTypeTitle">Тип активности</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">Отключить запись</string>
 </strings>

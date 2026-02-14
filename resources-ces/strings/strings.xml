@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">Počet sérií</string>
     <string id="SettingContractTitle">Čas kontrakce (sek)</string>
     <string id="SettingRelaxTitle">Čas relaxace (sek)</string>
+    <string id="SettingActivityNameTitle">Název aktivity</string>
+        <string id="SettingActivityTypeTitle">Typ aktivity</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">Zakázat záznam</string>
 </strings>

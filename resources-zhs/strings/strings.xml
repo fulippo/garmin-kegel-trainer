@@ -19,4 +19,12 @@
     <string id="SettingSeriesTitle">组数</string>
     <string id="SettingContractTitle">收缩时间 (秒)</string>
     <string id="SettingRelaxTitle">休息时间 (秒)</string>
+    <string id="SettingActivityNameTitle">活动名称</string>
+        <string id="SettingActivityTypeTitle">活动类型</string>
+        <string id="ActivityTypeBreathing">Breathing</string>
+        <string id="ActivityTypeYoga">Yoga</string>
+        <string id="ActivityTypeCardio">Cardio</string>
+        <string id="ActivityTypeFlexibility">Flexibility</string>
+        <string id="ActivityTypeGeneral">General</string>
+    <string id="SettingDisableRecordingTitle">禁用活动记录</string>
 </strings>
