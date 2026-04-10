@@ -44,16 +44,49 @@ class KegelTrainerView extends Ui.View {
     private var _timer as Timer.Timer?;
     private var _session as ActivityRecording.Session?;
 
+    // Cached resource strings (loaded once to avoid repeated heap allocations)
+    private var _strAppTitle1 as Lang.String = "";
+    private var _strAppTitle2 as Lang.String = "";
+    private var _strPressStart as Lang.String = "";
+    private var _strGetReady as Lang.String = "";
+    private var _strContract as Lang.String = "";
+    private var _strRelax as Lang.String = "";
+    private var _strRep as Lang.String = "";
+    private var _strOf as Lang.String = "";
+    private var _strSeries as Lang.String = "";
+    private var _strComplete as Lang.String = "";
+    private var _strGreatJob as Lang.String = "";
+    private var _strInstructions as Lang.String = "";
+    private var _strSaveWorkout as Lang.String = "";
+
     //! Constructor
     function initialize() {
         View.initialize();
         loadSettings();
+        loadStringResources();
         _state = STATE_READY;
         _currentRep = 1;
         _currentSeries = 1;
         _timeRemaining = COUNTDOWN_TIME;
         _timer = null;
         _session = null;
+    }
+
+    //! Load all string resources once to avoid repeated heap allocations during draw
+    private function loadStringResources() {
+        _strAppTitle1 = WatchUi.loadResource(Rez.Strings.AppTitle1) as Lang.String;
+        _strAppTitle2 = WatchUi.loadResource(Rez.Strings.AppTitle2) as Lang.String;
+        _strPressStart = WatchUi.loadResource(Rez.Strings.PressStart) as Lang.String;
+        _strGetReady = WatchUi.loadResource(Rez.Strings.GetReady) as Lang.String;
+        _strContract = WatchUi.loadResource(Rez.Strings.Contract) as Lang.String;
+        _strRelax = WatchUi.loadResource(Rez.Strings.Relax) as Lang.String;
+        _strRep = WatchUi.loadResource(Rez.Strings.Rep) as Lang.String;
+        _strOf = WatchUi.loadResource(Rez.Strings.Of) as Lang.String;
+        _strSeries = WatchUi.loadResource(Rez.Strings.Series) as Lang.String;
+        _strComplete = WatchUi.loadResource(Rez.Strings.Complete) as Lang.String;
+        _strGreatJob = WatchUi.loadResource(Rez.Strings.GreatJob) as Lang.String;
+        _strInstructions = WatchUi.loadResource(Rez.Strings.Instructions) as Lang.String;
+        _strSaveWorkout = WatchUi.loadResource(Rez.Strings.SaveWorkout) as Lang.String;
     }
 
     //! Load settings from Properties
@@ -159,8 +192,7 @@ class KegelTrainerView extends Ui.View {
 
     //! Show save confirmation dialog
     private function showSaveConfirmation() {
-        var message = WatchUi.loadResource(Rez.Strings.SaveWorkout);
-        var dialog = new Ui.Confirmation(message);
+        var dialog = new Ui.Confirmation(_strSaveWorkout);
         Ui.pushView(dialog, new SaveConfirmationDelegate(self), Ui.SLIDE_UP);
     }
 
@@ -291,6 +323,13 @@ class KegelTrainerView extends Ui.View {
     //! Update the display
     //! @param dc The device context for drawing
     function onUpdate(dc as Gfx.Dc) as Void {
+        // Disable anti-aliasing: on AMOLED devices with enhancedGraphicSupport,
+        // anti-aliasing is enabled by default and allocates per-frame working buffers
+        // that accumulate faster than the GC can reclaim, causing OOM around round 3.
+        if (dc has :setAntiAlias) {
+            dc.setAntiAlias(false);
+        }
+
         // Clear the screen
         dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
         dc.clear();
@@ -327,15 +366,15 @@ class KegelTrainerView extends Ui.View {
         var hSmall = dc.getFontHeight(Gfx.FONT_SMALL);
 
         // --- TITLE ---
-        dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_BLACK);
         var title1Y = (screenHeight * 0.15).toNumber();
-        dc.drawText(centerX, title1Y, Gfx.FONT_MEDIUM, WatchUi.loadResource(Rez.Strings.AppTitle1), Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, title1Y, Gfx.FONT_MEDIUM, _strAppTitle1, Gfx.TEXT_JUSTIFY_CENTER);
 
         var title2Y = title1Y + (hMedium * 0.8).toNumber();
-        dc.drawText(centerX, title2Y, Gfx.FONT_MEDIUM, WatchUi.loadResource(Rez.Strings.AppTitle2), Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, title2Y, Gfx.FONT_MEDIUM, _strAppTitle2, Gfx.TEXT_JUSTIFY_CENTER);
 
         // --- WORKOUT INFO ---
-        dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_BLACK);
 
         var repsY = (screenHeight * 0.45).toNumber();
         var repsText = _repsPerSeries + " reps x " + _numSeries + " series";
@@ -346,9 +385,9 @@ class KegelTrainerView extends Ui.View {
         dc.drawText(centerX, detailsY, Gfx.FONT_SMALL, detailsText, Gfx.TEXT_JUSTIFY_CENTER);
 
         // --- START PROMPT ---
-        dc.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_BLACK);
         var promptY = (screenHeight * 0.75).toNumber();
-        dc.drawText(centerX, promptY, Gfx.FONT_SMALL, WatchUi.loadResource(Rez.Strings.PressStart), Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, promptY, Gfx.FONT_SMALL, _strPressStart, Gfx.TEXT_JUSTIFY_CENTER);
     }
 
     //! Draw the initial countdown screen
@@ -357,12 +396,12 @@ class KegelTrainerView extends Ui.View {
         var hSmall = dc.getFontHeight(Gfx.FONT_SMALL);
 
         // --- GET READY text ---
-        dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_BLACK);
         var readyY = centerY - (hNumber / 2) - (hSmall * 0.9).toNumber();
-        dc.drawText(centerX, readyY, Gfx.FONT_SMALL, WatchUi.loadResource(Rez.Strings.GetReady), Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, readyY, Gfx.FONT_SMALL, _strGetReady, Gfx.TEXT_JUSTIFY_CENTER);
 
         // --- Countdown number ---
-        dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_BLACK);
         var timerY = centerY - (hNumber / 2);
         dc.drawText(centerX, timerY, Gfx.FONT_NUMBER_HOT, _timeRemaining.toString(), Gfx.TEXT_JUSTIFY_CENTER);
     }
@@ -384,7 +423,7 @@ class KegelTrainerView extends Ui.View {
         dc.setPenWidth(penWidth);
 
         // Background arc
-        dc.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_BLACK);
         dc.drawArc(centerX, centerY, arcRadius, Gfx.ARC_CLOCKWISE, 90, -270);
 
         // Progress arc
@@ -392,7 +431,7 @@ class KegelTrainerView extends Ui.View {
         var progress = (totalTime - _timeRemaining).toFloat() / totalTime.toFloat();
         var endAngle = 90 - (progress * 360).toNumber();
 
-        dc.setColor(isContract ? Gfx.COLOR_RED : Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(isContract ? Gfx.COLOR_RED : Gfx.COLOR_GREEN, Gfx.COLOR_BLACK);
         if (progress > 0) {
             dc.drawArc(centerX, centerY, arcRadius, Gfx.ARC_CLOCKWISE, 90, endAngle);
         }
@@ -402,22 +441,22 @@ class KegelTrainerView extends Ui.View {
         // Timer
         var timerY = centerY - (hNumber / 2);
         var timerColor = isContract ? Gfx.COLOR_RED : Gfx.COLOR_GREEN;
-        dc.setColor(timerColor, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(timerColor, Gfx.COLOR_BLACK);
         dc.drawText(centerX, timerY, Gfx.FONT_NUMBER_HOT, _timeRemaining.toString(), Gfx.TEXT_JUSTIFY_CENTER);
 
         // State label
-        dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-        var stateText = isContract ? WatchUi.loadResource(Rez.Strings.Contract) : WatchUi.loadResource(Rez.Strings.Relax);
+        dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_BLACK);
+        var stateText = isContract ? _strContract : _strRelax;
         var stateY = timerY - (hSmall * 0.9).toNumber();
         dc.drawText(centerX, stateY, Gfx.FONT_SMALL, stateText, Gfx.TEXT_JUSTIFY_CENTER);
 
         // Rep and series counter
-        dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_BLACK);
         var repText;
         if (_numSeries > 1) {
-            repText = WatchUi.loadResource(Rez.Strings.Rep) + " " + _currentRep + "/" + _repsPerSeries + " - " + WatchUi.loadResource(Rez.Strings.Series) + " " + _currentSeries + "/" + _numSeries;
+            repText = _strRep + " " + _currentRep + "/" + _repsPerSeries + " - " + _strSeries + " " + _currentSeries + "/" + _numSeries;
         } else {
-            repText = WatchUi.loadResource(Rez.Strings.Rep) + " " + _currentRep + " " + WatchUi.loadResource(Rez.Strings.Of) + " " + _repsPerSeries;
+            repText = _strRep + " " + _currentRep + " " + _strOf + " " + _repsPerSeries;
         }
         var repY = timerY + hNumber;
         dc.drawText(centerX, repY, Gfx.FONT_SMALL, repText, Gfx.TEXT_JUSTIFY_CENTER);
@@ -429,19 +468,19 @@ class KegelTrainerView extends Ui.View {
         var hMedium = dc.getFontHeight(Gfx.FONT_MEDIUM);
 
         // --- SUCCESS TITLE ---
-        dc.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_BLACK);
         var yComplete = (height * 0.25).toNumber();
-        dc.drawText(centerX, yComplete, Gfx.FONT_LARGE, WatchUi.loadResource(Rez.Strings.Complete), Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, yComplete, Gfx.FONT_LARGE, _strComplete, Gfx.TEXT_JUSTIFY_CENTER);
 
         // --- CENTRAL MESSAGE ---
-        dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_BLACK);
         var yGreatJob = centerY - (hMedium / 2);
-        dc.drawText(centerX, yGreatJob, Gfx.FONT_MEDIUM, WatchUi.loadResource(Rez.Strings.GreatJob), Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, yGreatJob, Gfx.FONT_MEDIUM, _strGreatJob, Gfx.TEXT_JUSTIFY_CENTER);
 
         // --- INSTRUCTIONS ---
-        dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_BLACK);
         var yInstructions = (height * 0.75).toNumber();
-        dc.drawText(centerX, yInstructions, Gfx.FONT_TINY, WatchUi.loadResource(Rez.Strings.Instructions), Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, yInstructions, Gfx.FONT_TINY, _strInstructions, Gfx.TEXT_JUSTIFY_CENTER);
     }
 
     //! Check if exercise is in progress
