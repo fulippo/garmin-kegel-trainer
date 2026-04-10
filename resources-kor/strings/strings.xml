@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <strings>
-    <string id="AppName">케겔 트레이너</string>
-    <string id="AppTitle1">케겔</string>
-    <string id="AppTitle2">트레이너</string>
+    <string id="AppName">Kegel Trainer</string>
+    <string id="AppTitle1">KEGEL</string>
+    <string id="AppTitle2">TRAINER</string>
     <string id="Contract">수축</string>
     <string id="Relax">이완</string>
     <string id="Ready">준비</string>

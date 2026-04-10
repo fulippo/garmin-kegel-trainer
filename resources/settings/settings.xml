@@ -8,12 +8,50 @@
         <settingConfig type="numeric" min="1" max="10" />
     </setting>
 
-    <setting propertyKey="@Properties.contractTime" title="@Strings.SettingContractTitle">
+    <setting propertyKey="@Properties.step1Type" title="@Strings.SettingStep1TypeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.StepTypeHold</listEntry>
+            <listEntry value="1">@Strings.StepTypePulse</listEntry>
+            <listEntry value="2">@Strings.StepTypeRest</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.step1Duration" title="@Strings.SettingStep1DurationTitle">
         <settingConfig type="numeric" min="1" max="60" />
     </setting>
 
-    <setting propertyKey="@Properties.relaxTime" title="@Strings.SettingRelaxTitle">
+    <setting propertyKey="@Properties.step2Type" title="@Strings.SettingStep2TypeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.StepTypeOff</listEntry>
+            <listEntry value="1">@Strings.StepTypeHold</listEntry>
+            <listEntry value="2">@Strings.StepTypePulse</listEntry>
+            <listEntry value="3">@Strings.StepTypeRest</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.step2Duration" title="@Strings.SettingStep2DurationTitle">
         <settingConfig type="numeric" min="1" max="60" />
+    </setting>
+
+    <setting propertyKey="@Properties.step3Type" title="@Strings.SettingStep3TypeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.StepTypeOff</listEntry>
+            <listEntry value="1">@Strings.StepTypeHold</listEntry>
+            <listEntry value="2">@Strings.StepTypePulse</listEntry>
+            <listEntry value="3">@Strings.StepTypeRest</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.step3Duration" title="@Strings.SettingStep3DurationTitle">
+        <settingConfig type="numeric" min="1" max="60" />
+    </setting>
+
+    <setting propertyKey="@Properties.pulseSpeed" title="@Strings.SettingPulseSpeedTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.PulseSpeedSlow</listEntry>
+            <listEntry value="1">@Strings.PulseSpeedMedium</listEntry>
+            <listEntry value="2">@Strings.PulseSpeedFast</listEntry>
+        </settingConfig>
     </setting>
 
     <setting propertyKey="@Properties.activityName" title="@Strings.SettingActivityNameTitle">

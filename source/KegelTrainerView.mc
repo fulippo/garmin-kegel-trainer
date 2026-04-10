@@ -16,10 +16,16 @@ using Toybox.Activity;
 enum {
     STATE_READY,      // Waiting to start
     STATE_COUNTDOWN,  // Initial 3-second countdown
-    STATE_CONTRACT,   // Active contraction phase
-    STATE_RELAX,      // Rest phase
+    STATE_HOLD,       // Hold/contract phase
+    STATE_PULSE,      // Pulse (metronome vibration) phase
+    STATE_REST,       // Rest phase
     STATE_COMPLETE    // Workout finished
 }
+
+//! Step type constants (stored in _stepTypes array)
+const STEP_HOLD  = 0;
+const STEP_PULSE = 1;
+const STEP_REST  = 2;
 
 //! Main view class for the Kegel Trainer
 class KegelTrainerView extends Ui.View {
@@ -28,13 +34,18 @@ class KegelTrainerView extends Ui.View {
     private const COUNTDOWN_TIME = 3;
 
     // Settings (loaded from Properties)
-    private var _contractTime as Lang.Number = 10;
-    private var _relaxTime as Lang.Number = 5;
     private var _repsPerSeries as Lang.Number = 10;
     private var _numSeries as Lang.Number = 1;
     private var _activityName as Lang.String = "Kegel";
     private var _activityType as Lang.Number = 0;
     private var _disableRecording as Lang.Boolean = false;
+
+    // Step sequence
+    private var _stepTypes     as Lang.Array<Lang.Number> = [] as Lang.Array<Lang.Number>;
+    private var _stepDurations as Lang.Array<Lang.Number> = [] as Lang.Array<Lang.Number>;
+    private var _stepCount     as Lang.Number = 0;
+    private var _stepIndex     as Lang.Number = 0;
+    private var _pulseIntervalMs as Lang.Number = 500;
 
     // State variables
     private var _state as Lang.Number;
@@ -42,6 +53,7 @@ class KegelTrainerView extends Ui.View {
     private var _currentSeries as Lang.Number;
     private var _timeRemaining as Lang.Number;
     private var _timer as Timer.Timer?;
+    private var _pulseTimer as Timer.Timer?;
     private var _session as ActivityRecording.Session?;
 
     //! Constructor
@@ -51,8 +63,10 @@ class KegelTrainerView extends Ui.View {
         _state = STATE_READY;
         _currentRep = 1;
         _currentSeries = 1;
+        _stepIndex = 0;
         _timeRemaining = COUNTDOWN_TIME;
         _timer = null;
+        _pulseTimer = null;
         _session = null;
     }
 
@@ -60,11 +74,47 @@ class KegelTrainerView extends Ui.View {
     private function loadSettings() {
         _repsPerSeries = Properties.getValue("repsPerSeries") as Lang.Number;
         _numSeries = Properties.getValue("numSeries") as Lang.Number;
-        _contractTime = Properties.getValue("contractTime") as Lang.Number;
-        _relaxTime = Properties.getValue("relaxTime") as Lang.Number;
         _activityName = Properties.getValue("activityName") as Lang.String;
         _activityType = Properties.getValue("activityType") as Lang.Number;
         _disableRecording = Properties.getValue("disableRecording") as Lang.Boolean;
+
+        // Compute pulse interval from speed setting (0=Slow, 1=Medium, 2=Fast)
+        var pulseSpeed = Properties.getValue("pulseSpeed") as Lang.Number;
+        if (pulseSpeed == 0) {
+            _pulseIntervalMs = 1000;  // Slow: 1/sec
+        } else if (pulseSpeed == 2) {
+            _pulseIntervalMs = 333;   // Fast: 3/sec
+        } else {
+            _pulseIntervalMs = 500;   // Medium: 2/sec (default)
+        }
+
+        // Build step sequence
+        _stepTypes     = [] as Lang.Array<Lang.Number>;
+        _stepDurations = [] as Lang.Array<Lang.Number>;
+
+        // Step 1 is always present; type 0=Hold, 1=Pulse, 2=Rest maps to STEP_HOLD/PULSE/REST
+        var s1Type = Properties.getValue("step1Type") as Lang.Number;
+        var s1Dur  = Properties.getValue("step1Duration") as Lang.Number;
+        _stepTypes.add(s1Type);
+        _stepDurations.add(s1Dur);
+
+        // Step 2: 0=Off (skip), 1=Hold, 2=Pulse, 3=Rest → actual type = rawValue - 1
+        var s2Type = Properties.getValue("step2Type") as Lang.Number;
+        var s2Dur  = Properties.getValue("step2Duration") as Lang.Number;
+        if (s2Type > 0) {
+            _stepTypes.add(s2Type - 1);
+            _stepDurations.add(s2Dur);
+        }
+
+        // Step 3: 0=Off (skip), 1=Hold, 2=Pulse, 3=Rest → actual type = rawValue - 1
+        var s3Type = Properties.getValue("step3Type") as Lang.Number;
+        var s3Dur  = Properties.getValue("step3Duration") as Lang.Number;
+        if (s3Type > 0) {
+            _stepTypes.add(s3Type - 1);
+            _stepDurations.add(s3Dur);
+        }
+
+        _stepCount = _stepTypes.size();
     }
 
     //! Called when the view is brought to the foreground
@@ -79,6 +129,7 @@ class KegelTrainerView extends Ui.View {
     //! Called when the view is removed from the screen
     function onHide() {
         stopTimer();
+        stopPulseTimer();
         // Only discard if not in complete state (user hasn't chosen yet)
         if (_state != STATE_COMPLETE) {
             discardSession();
@@ -92,6 +143,7 @@ class KegelTrainerView extends Ui.View {
             _state = STATE_COUNTDOWN;
             _currentRep = 1;
             _currentSeries = 1;
+            _stepIndex = 0;
             _timeRemaining = COUNTDOWN_TIME;
             startSession();
             startTimer();
@@ -164,23 +216,68 @@ class KegelTrainerView extends Ui.View {
         Ui.pushView(dialog, new SaveConfirmationDelegate(self), Ui.SLIDE_UP);
     }
 
-    //! Start the countdown timer (fires every second)
+    //! Start the main 1-second interval timer
     private function startTimer() {
         if (_timer != null) {
             _timer.start(method(:onTimerTick), 1000, true);
         }
     }
 
-    //! Stop the countdown timer
+    //! Stop the main interval timer
     private function stopTimer() {
         if (_timer != null) {
             _timer.stop();
         }
     }
 
-    //! Timer callback - called every second
+    //! Start the pulse vibration timer
+    private function startPulseTimer() as Void {
+        stopPulseTimer();
+        _pulseTimer = new Timer.Timer();
+        _pulseTimer.start(method(:onPulseTick), _pulseIntervalMs, true);
+    }
+
+    //! Stop the pulse vibration timer
+    private function stopPulseTimer() as Void {
+        if (_pulseTimer != null) {
+            _pulseTimer.stop();
+            _pulseTimer = null;
+        }
+    }
+
+    //! Pulse timer callback — fires at configurable interval during PULSE state
+    //! Must be non-private to be referenced via method(:onPulseTick)
+    function onPulseTick() as Void {
+        doVibratePulse();
+    }
+
+    //! Execute the step at the given index, updating state and starting timers
+    private function executeStep(index as Lang.Number) as Void {
+        var t = _stepTypes[index] as Lang.Number;
+        _timeRemaining = _stepDurations[index] as Lang.Number;
+        if (t == STEP_HOLD) {
+            _state = STATE_HOLD;
+            stopPulseTimer();
+            doVibrate();
+        } else if (t == STEP_PULSE) {
+            _state = STATE_PULSE;
+            startPulseTimer();
+            doVibrate();
+        } else {
+            _state = STATE_REST;
+            stopPulseTimer();
+            doVibrateRelax();
+        }
+    }
+
+    //! Main timer callback — called every second
+    //! Must be non-private to be referenced via method(:onTimerTick)
     function onTimerTick() as Void {
-        if (_state == STATE_COUNTDOWN || _state == STATE_CONTRACT || _state == STATE_RELAX) {
+        if (_state == STATE_COUNTDOWN ||
+            _state == STATE_HOLD      ||
+            _state == STATE_PULSE     ||
+            _state == STATE_REST) {
+
             _timeRemaining--;
 
             // Keep display on when recording is disabled
@@ -199,51 +296,42 @@ class KegelTrainerView extends Ui.View {
     //! Handle state transitions
     private function transitionState() {
         if (_state == STATE_COUNTDOWN) {
-            // Countdown finished, start first contraction
-            _state = STATE_CONTRACT;
-            _timeRemaining = _contractTime;
-            doVibrate();
-        } else if (_state == STATE_CONTRACT) {
-            // Finished contraction
-            if (_currentRep >= _repsPerSeries) {
-                // Finished all reps in this series
-                if (_currentSeries >= _numSeries) {
-                    // Completed all series!
-                    _state = STATE_COMPLETE;
-                    stopTimer();
-                    doVibrateComplete();
-                    if (!_disableRecording) {
-                        showSaveConfirmation();
+            // Countdown finished — start first step of first rep
+            _stepIndex = 0;
+            executeStep(0);
+        } else {
+            // Current step finished — advance to next step in the sequence
+            _stepIndex++;
+            if (_stepIndex >= _stepCount) {
+                // End of this rep's step sequence
+                _stepIndex = 0;
+                if (_currentRep >= _repsPerSeries) {
+                    // Last rep of this series
+                    _currentRep = 1;
+                    if (_currentSeries >= _numSeries) {
+                        // All series complete!
+                        stopPulseTimer();
+                        _state = STATE_COMPLETE;
+                        stopTimer();
+                        doVibrateComplete();
+                        if (!_disableRecording) {
+                            showSaveConfirmation();
+                        }
+                    } else {
+                        _currentSeries++;
+                        executeStep(0);
                     }
                 } else {
-                    // Move to relax before next series
-                    _state = STATE_RELAX;
-                    _timeRemaining = _relaxTime;
-                    doVibrateRelax();
+                    _currentRep++;
+                    executeStep(0);
                 }
             } else {
-                // Move to relax phase
-                _state = STATE_RELAX;
-                _timeRemaining = _relaxTime;
-                doVibrateRelax();
+                executeStep(_stepIndex);
             }
-        } else if (_state == STATE_RELAX) {
-            // Finished relaxation
-            if (_currentRep >= _repsPerSeries) {
-                // Start next series
-                _currentSeries++;
-                _currentRep = 1;
-            } else {
-                // Next rep in current series
-                _currentRep++;
-            }
-            _state = STATE_CONTRACT;
-            _timeRemaining = _contractTime;
-            doVibrate();
         }
     }
 
-    //! Trigger a single short vibration for contraction
+    //! Trigger a single short vibration for Hold/Contract start
     private function doVibrate() {
         if (Attention has :vibrate) {
             var vibeData = [new Attention.VibeProfile(50, 200)];
@@ -251,7 +339,14 @@ class KegelTrainerView extends Ui.View {
         }
     }
 
-    //! Trigger two short vibrations for relax
+    //! Trigger a short pulse vibration (used by pulse timer)
+    private function doVibratePulse() as Void {
+        if (Attention has :vibrate) {
+            Attention.vibrate([new Attention.VibeProfile(75, 80)]);
+        }
+    }
+
+    //! Trigger two short vibrations for Rest start
     private function doVibrateRelax() {
         if (Attention has :vibrate) {
             var vibeData = [
@@ -263,7 +358,7 @@ class KegelTrainerView extends Ui.View {
         }
     }
 
-    //! Trigger a longer vibration pattern for completion
+    //! Trigger a longer vibration pattern on completion
     private function doVibrateComplete() {
         if (Attention has :vibrate) {
             var vibeData = [
@@ -280,10 +375,12 @@ class KegelTrainerView extends Ui.View {
     //! Reset the exercise to initial state
     function resetExercise() {
         stopTimer();
+        stopPulseTimer();
         discardSession();
         _state = STATE_READY;
         _currentRep = 1;
         _currentSeries = 1;
+        _stepIndex = 0;
         _timeRemaining = COUNTDOWN_TIME;
         Ui.requestUpdate();
     }
@@ -307,11 +404,14 @@ class KegelTrainerView extends Ui.View {
             case STATE_COUNTDOWN:
                 drawCountdownScreen(dc, centerX, centerY);
                 break;
-            case STATE_CONTRACT:
-                drawExerciseScreen(dc, centerX, centerY, true);
+            case STATE_HOLD:
+                drawExerciseScreen(dc, centerX, centerY, STATE_HOLD);
                 break;
-            case STATE_RELAX:
-                drawExerciseScreen(dc, centerX, centerY, false);
+            case STATE_PULSE:
+                drawExerciseScreen(dc, centerX, centerY, STATE_PULSE);
+                break;
+            case STATE_REST:
+                drawExerciseScreen(dc, centerX, centerY, STATE_REST);
                 break;
             case STATE_COMPLETE:
                 drawCompleteScreen(dc, centerX, centerY);
@@ -324,7 +424,7 @@ class KegelTrainerView extends Ui.View {
         var screenHeight = dc.getHeight();
 
         var hMedium = dc.getFontHeight(Gfx.FONT_MEDIUM);
-        var hSmall = dc.getFontHeight(Gfx.FONT_SMALL);
+        var hSmall  = dc.getFontHeight(Gfx.FONT_SMALL);
 
         // --- TITLE ---
         dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
@@ -341,9 +441,19 @@ class KegelTrainerView extends Ui.View {
         var repsText = _repsPerSeries + " reps x " + _numSeries + " series";
         dc.drawText(centerX, repsY, Gfx.FONT_SMALL, repsText, Gfx.TEXT_JUSTIFY_CENTER);
 
+        // Step sequence summary line (e.g. "HOLD 10s > REST 5s")
+        var stepLabels = ["HOLD", "PULSE", "REST"];
+        var summary = "";
+        for (var i = 0; i < _stepCount; i++) {
+            if (i > 0) {
+                summary = summary + " > ";
+            }
+            var sType = _stepTypes[i] as Lang.Number;
+            var sDur  = _stepDurations[i] as Lang.Number;
+            summary = summary + stepLabels[sType] + " " + sDur + "s";
+        }
         var detailsY = repsY + hSmall;
-        var detailsText = _contractTime + "s / " + _relaxTime + "s";
-        dc.drawText(centerX, detailsY, Gfx.FONT_SMALL, detailsText, Gfx.TEXT_JUSTIFY_CENTER);
+        dc.drawText(centerX, detailsY, Gfx.FONT_TINY, summary, Gfx.TEXT_JUSTIFY_CENTER);
 
         // --- START PROMPT ---
         dc.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
@@ -367,8 +477,9 @@ class KegelTrainerView extends Ui.View {
         dc.drawText(centerX, timerY, Gfx.FONT_NUMBER_HOT, _timeRemaining.toString(), Gfx.TEXT_JUSTIFY_CENTER);
     }
 
-    //! Draw the exercise screen during contract/relax phases
-    private function drawExerciseScreen(dc as Gfx.Dc, centerX as Lang.Number, centerY as Lang.Number, isContract as Lang.Boolean) {
+    //! Draw the exercise screen during Hold / Pulse / Rest phases
+    //! @param state  One of STATE_HOLD, STATE_PULSE, STATE_REST
+    private function drawExerciseScreen(dc as Gfx.Dc, centerX as Lang.Number, centerY as Lang.Number, state as Lang.Number) {
         var width = dc.getWidth();
 
         // Arc parameters
@@ -378,7 +489,21 @@ class KegelTrainerView extends Ui.View {
 
         // Font metrics
         var hNumber = dc.getFontHeight(Gfx.FONT_NUMBER_HOT);
-        var hSmall = dc.getFontHeight(Gfx.FONT_SMALL);
+        var hSmall  = dc.getFontHeight(Gfx.FONT_SMALL);
+
+        // Colour and label based on current step type
+        var arcColor;
+        var stateText;
+        if (state == STATE_HOLD) {
+            arcColor  = Gfx.COLOR_RED;
+            stateText = WatchUi.loadResource(Rez.Strings.Hold);
+        } else if (state == STATE_PULSE) {
+            arcColor  = Gfx.COLOR_ORANGE;
+            stateText = WatchUi.loadResource(Rez.Strings.Pulse);
+        } else {
+            arcColor  = Gfx.COLOR_GREEN;
+            stateText = WatchUi.loadResource(Rez.Strings.Rest);
+        }
 
         // --- DRAW ARC ---
         dc.setPenWidth(penWidth);
@@ -388,11 +513,11 @@ class KegelTrainerView extends Ui.View {
         dc.drawArc(centerX, centerY, arcRadius, Gfx.ARC_CLOCKWISE, 90, -270);
 
         // Progress arc
-        var totalTime = isContract ? _contractTime : _relaxTime;
+        var totalTime = _stepDurations[_stepIndex] as Lang.Number;
         var progress = (totalTime - _timeRemaining).toFloat() / totalTime.toFloat();
         var endAngle = 90 - (progress * 360).toNumber();
 
-        dc.setColor(isContract ? Gfx.COLOR_RED : Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(arcColor, Gfx.COLOR_TRANSPARENT);
         if (progress > 0) {
             dc.drawArc(centerX, centerY, arcRadius, Gfx.ARC_CLOCKWISE, 90, endAngle);
         }
@@ -401,13 +526,11 @@ class KegelTrainerView extends Ui.View {
 
         // Timer
         var timerY = centerY - (hNumber / 2);
-        var timerColor = isContract ? Gfx.COLOR_RED : Gfx.COLOR_GREEN;
-        dc.setColor(timerColor, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(arcColor, Gfx.COLOR_TRANSPARENT);
         dc.drawText(centerX, timerY, Gfx.FONT_NUMBER_HOT, _timeRemaining.toString(), Gfx.TEXT_JUSTIFY_CENTER);
 
         // State label
         dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-        var stateText = isContract ? WatchUi.loadResource(Rez.Strings.Contract) : WatchUi.loadResource(Rez.Strings.Relax);
         var stateY = timerY - (hSmall * 0.9).toNumber();
         dc.drawText(centerX, stateY, Gfx.FONT_SMALL, stateText, Gfx.TEXT_JUSTIFY_CENTER);
 
@@ -446,7 +569,10 @@ class KegelTrainerView extends Ui.View {
 
     //! Check if exercise is in progress
     function isExerciseActive() as Lang.Boolean {
-        return (_state == STATE_COUNTDOWN || _state == STATE_CONTRACT || _state == STATE_RELAX);
+        return (_state == STATE_COUNTDOWN ||
+                _state == STATE_HOLD      ||
+                _state == STATE_PULSE     ||
+                _state == STATE_REST);
     }
 
     //! Get current state

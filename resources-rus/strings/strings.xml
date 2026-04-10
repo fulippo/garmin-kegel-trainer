@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <strings>
-    <string id="AppName">Тренер Кегеля</string>
-    <string id="AppTitle1">КЕГЕЛЬ</string>
-    <string id="AppTitle2">ТРЕНЕР</string>
+    <string id="AppName">Kegel Trainer</string>
+    <string id="AppTitle1">KEGEL</string>
+    <string id="AppTitle2">TRAINER</string>
     <string id="Contract">СЖАТЬ</string>
     <string id="Relax">РАССЛАБИТЬ</string>
     <string id="Ready">ГОТОВ</string>

@@ -27,4 +27,25 @@
     <string id="ActivityTypeFlexibility">Flexibility</string>
     <string id="ActivityTypeGeneral">General</string>
     <string id="SettingDisableRecordingTitle">Disable activity recording</string>
+
+    <string id="Hold">HOLD</string>
+    <string id="Pulse">PULSE</string>
+    <string id="Rest">REST</string>
+
+    <string id="SettingStep1TypeTitle">Step 1 type</string>
+    <string id="SettingStep1DurationTitle">Step 1 duration (sec)</string>
+    <string id="SettingStep2TypeTitle">Step 2 type</string>
+    <string id="SettingStep2DurationTitle">Step 2 duration (sec)</string>
+    <string id="SettingStep3TypeTitle">Step 3 type</string>
+    <string id="SettingStep3DurationTitle">Step 3 duration (sec)</string>
+    <string id="SettingPulseSpeedTitle">Pulse speed</string>
+
+    <string id="StepTypeHold">Hold</string>
+    <string id="StepTypePulse">Pulse</string>
+    <string id="StepTypeRest">Rest</string>
+    <string id="StepTypeOff">Off</string>
+
+    <string id="PulseSpeedSlow">Slow (1/sec)</string>
+    <string id="PulseSpeedMedium">Medium (2/sec)</string>
+    <string id="PulseSpeedFast">Fast (3/sec)</string>
 </strings>
