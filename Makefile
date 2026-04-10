@@ -3,7 +3,7 @@
 
 # Configuration - Update these paths for your system
 DEVICE ?= fenix7
-PRIVATE_KEY ?= $(HOME)/Workspace/connectIQ/developer_key
+PRIVATE_KEY ?= $(HOME)/Lab/connectIQ/developer_key
 APP_NAME = KegelTrainer
 SDK_HOME ?= $(HOME)/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-8.4.0-2025-12-03-5122605dc
 
