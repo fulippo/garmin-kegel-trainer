@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.3.0...v1.3.1) (2026-04-11)
+
+
+### Bug Fixes
+
+* app crash when pressing "back" on the workout complete screen ([#7](https://github.com/fulippo/garmin-kegel-trainer/issues/7)) ([ab6809f](https://github.com/fulippo/garmin-kegel-trainer/commit/ab6809fc44793fa1d30525918524bb5dae36a683))
+
 ## [1.3.0](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.2.0...v1.3.0) (2026-02-14)
 
 
