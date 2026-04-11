@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.3.1...v1.3.2) (2026-04-11)
+
+
+### Bug Fixes
+
+* crash issue + ci ([#9](https://github.com/fulippo/garmin-kegel-trainer/issues/9)) ([8b21b23](https://github.com/fulippo/garmin-kegel-trainer/commit/8b21b2321a8838be0912d2a84262923a7ea591e8))
+
 ## [1.3.1](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.3.0...v1.3.1) (2026-04-11)
 
 
