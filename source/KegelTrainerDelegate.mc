@@ -57,7 +57,13 @@ class KegelTrainerDelegate extends Ui.BehaviorDelegate {
             _view.resetExercise();
             return true;
         }
-        // Allow default back behavior (exit app) when not active
+        if (_view.getState() == STATE_COMPLETE) {
+            // Discard any session that wasn't saved via the dialog before exiting.
+            // onHide() skips this when STATE_COMPLETE to avoid discarding while the
+            // save dialog is still open, so we must clean up here instead.
+            _view.discardSession();
+        }
+        // Allow default back behavior (exit app)
         return false;
     }
 

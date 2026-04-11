@@ -43,6 +43,7 @@ class KegelTrainerView extends Ui.View {
     private var _timeRemaining as Lang.Number;
     private var _timer as Timer.Timer?;
     private var _session as ActivityRecording.Session?;
+    private var _pendingSaveDialog as Lang.Boolean = false;
 
     //! Constructor
     function initialize() {
@@ -54,6 +55,7 @@ class KegelTrainerView extends Ui.View {
         _timeRemaining = COUNTDOWN_TIME;
         _timer = null;
         _session = null;
+        _pendingSaveDialog = false;
     }
 
     //! Load settings from Properties
@@ -213,7 +215,10 @@ class KegelTrainerView extends Ui.View {
                     stopTimer();
                     doVibrateComplete();
                     if (!_disableRecording) {
-                        showSaveConfirmation();
+                        // Flag the dialog to be shown from onUpdate() — calling
+                        // Ui.pushView() directly from a timer callback corrupts
+                        // the view stack and crashes on back-press.
+                        _pendingSaveDialog = true;
                     }
                 } else {
                     // Move to relax before next series
@@ -281,6 +286,7 @@ class KegelTrainerView extends Ui.View {
     function resetExercise() {
         stopTimer();
         discardSession();
+        _pendingSaveDialog = false;
         _state = STATE_READY;
         _currentRep = 1;
         _currentSeries = 1;
@@ -291,6 +297,14 @@ class KegelTrainerView extends Ui.View {
     //! Update the display
     //! @param dc The device context for drawing
     function onUpdate(dc as Gfx.Dc) as Void {
+        // Show save dialog here, not from the timer callback — calling Ui.pushView()
+        // from a timer callback corrupts the view stack and crashes on back-press.
+        if (_pendingSaveDialog) {
+            _pendingSaveDialog = false;
+            showSaveConfirmation();
+            return;
+        }
+
         // Clear the screen
         dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
         dc.clear();
