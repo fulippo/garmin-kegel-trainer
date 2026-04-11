@@ -24,7 +24,9 @@ jobs:
         id: cache-sdk
         uses: actions/cache@v4
         with:
-          path: ~/.config/connect-iq
+          path: |
+            ~/.Garmin/ConnectIQ
+            ~/.config/connect-iq-sdk-manager
           key: connect-iq-sdk-9.1.0-${{ hashFiles('manifest.xml') }}
           restore-keys: |
             connect-iq-sdk-9.1.0-
