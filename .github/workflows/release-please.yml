@@ -56,7 +56,7 @@ jobs:
 
       - name: Download Connect IQ SDK and devices
         run: |
-          connect-iq-sdk-manager sdk set 8.4.0
+          connect-iq-sdk-manager sdk set 9.1.0
           connect-iq-sdk-manager device download -m manifest.xml
           echo "SDK_HOME=$(connect-iq-sdk-manager sdk current-path)" >> $GITHUB_ENV
 
