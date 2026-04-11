@@ -55,18 +55,6 @@ jobs:
           connect-iq-sdk-manager sdk set 9.1.0
           connect-iq-sdk-manager device download -m manifest.xml
 
-      - name: Debug SDK paths
-        if: steps.cache-sdk.outputs.cache-hit != 'true'
-        run: |
-          echo "=== SDK current path ==="
-          connect-iq-sdk-manager sdk current-path
-          echo "=== HOME subdirs ==="
-          ls -la ~/
-          echo "=== .config subdirs ==="
-          ls -la ~/.config/ || true
-          echo "=== .Garmin ==="
-          ls -la ~/.Garmin/ || true
-
       - name: Install Connect IQ SDK Manager (cached run)
         if: steps.cache-sdk.outputs.cache-hit == 'true'
         run: |
