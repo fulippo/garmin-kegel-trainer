@@ -44,9 +44,7 @@ jobs:
           path: |
             ~/.Garmin/ConnectIQ
             ~/.config/connect-iq-sdk-manager
-          key: connect-iq-sdk-9.1.0-${{ hashFiles('manifest.xml') }}
-          restore-keys: |
-            connect-iq-sdk-9.1.0-
+          key: connect-iq-sdk-9.1.0
 
       - name: Install Connect IQ SDK Manager
         if: steps.cache-sdk.outputs.cache-hit != 'true'
