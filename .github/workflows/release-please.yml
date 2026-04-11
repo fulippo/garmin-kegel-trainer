@@ -37,28 +37,49 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Cache Connect IQ SDK
+        id: cache-sdk
+        uses: actions/cache@v4
+        with:
+          path: ~/.config/connect-iq
+          key: connect-iq-sdk-9.1.0-${{ hashFiles('manifest.xml') }}
+          restore-keys: |
+            connect-iq-sdk-9.1.0-
+
       - name: Install Connect IQ SDK Manager
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
         run: |
           curl -sL https://raw.githubusercontent.com/lindell/connect-iq-sdk-manager-cli/master/install.sh | sh
           echo "$HOME/bin" >> $GITHUB_PATH
 
       - name: Accept SDK agreement
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
         run: |
           HASH=$(connect-iq-sdk-manager agreement view 2>&1 | grep -i 'hash' | sed 's/.*: //')
           connect-iq-sdk-manager agreement accept -H "$HASH"
 
       - name: Login to Garmin
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
         env:
           GARMIN_USERNAME: ${{ secrets.GARMIN_USERNAME }}
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
         run: |
-          connect-iq-sdk-manager login
+          connect-iq-sdk-manager login --username "$GARMIN_USERNAME" --password "$GARMIN_PASSWORD"
 
       - name: Download Connect IQ SDK and devices
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
         run: |
           connect-iq-sdk-manager sdk set 9.1.0
           connect-iq-sdk-manager device download -m manifest.xml
-          echo "SDK_HOME=$(connect-iq-sdk-manager sdk current-path)" >> $GITHUB_ENV
+
+      - name: Install Connect IQ SDK Manager (cached run)
+        if: steps.cache-sdk.outputs.cache-hit == 'true'
+        run: |
+          curl -sL https://raw.githubusercontent.com/lindell/connect-iq-sdk-manager-cli/master/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Set SDK path
+        run: echo "SDK_HOME=$(connect-iq-sdk-manager sdk current-path)" >> $GITHUB_ENV
 
       - name: Set up developer key
         run: |
