@@ -103,13 +103,6 @@ class KegelTrainerView extends Ui.View {
 
     //! Start activity recording session (keeps display active)
     private function startSession() {
-        if (_disableRecording) {
-            if (Attention has :backlight) {
-                Attention.backlight(true);
-            }
-            return;
-        }
-
         if (Toybox has :ActivityRecording) {
             if (_session == null || !_session.isRecording()) {
                 var sport = Activity.SPORT_TRAINING;
@@ -185,11 +178,6 @@ class KegelTrainerView extends Ui.View {
         if (_state == STATE_COUNTDOWN || _state == STATE_CONTRACT || _state == STATE_RELAX) {
             _timeRemaining--;
 
-            // Keep display on when recording is disabled
-            if (_disableRecording && (Attention has :backlight)) {
-                Attention.backlight(true);
-            }
-
             if (_timeRemaining <= 0) {
                 transitionState();
             }
@@ -214,7 +202,11 @@ class KegelTrainerView extends Ui.View {
                     _state = STATE_COMPLETE;
                     stopTimer();
                     doVibrateComplete();
-                    if (!_disableRecording) {
+                    if (_disableRecording) {
+                        // User opted out of saving — discard silently.
+                        // ActivityRecording still ran to keep the display active.
+                        discardSession();
+                    } else {
                         // Flag the dialog to be shown from onUpdate() — calling
                         // Ui.pushView() directly from a timer callback corrupts
                         // the view stack and crashes on back-press.
