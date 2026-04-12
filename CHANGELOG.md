@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.3.2...v1.3.3) (2026-04-12)
+
+
+### Bug Fixes
+
+* always use ActivityRecording to prevent AMOLED display timeout crash ([#14](https://github.com/fulippo/garmin-kegel-trainer/issues/14)) ([60304eb](https://github.com/fulippo/garmin-kegel-trainer/commit/60304eb7d944bfacfb27152b5e55203fd7510160))
+
 ## [1.3.2](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.3.1...v1.3.2) (2026-04-11)
 
 
