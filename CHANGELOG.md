@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.3.3...v1.3.4) (2026-06-21)
+
+
+### Bug Fixes
+
+* resume timer correctly when returning from a notification ([#16](https://github.com/fulippo/garmin-kegel-trainer/issues/16)) ([ecdd63c](https://github.com/fulippo/garmin-kegel-trainer/commit/ecdd63cf95619a2c1c6232ce2903fe6c814e2c93))
+
 ## [1.3.3](https://github.com/fulippo/garmin-kegel-trainer/compare/v1.3.2...v1.3.3) (2026-04-12)
 
 
