@@ -71,15 +71,26 @@ class KegelTrainerView extends Ui.View {
 
     //! Called when the view is brought to the foreground
     function onShow() {
-        loadSettings();
-        // Create timer if not exists
+        if (!isExerciseActive()) {
+            loadSettings();
+        }
         if (_timer == null) {
             _timer = new Timer.Timer();
+        }
+        // Resume the timer if an exercise was interrupted (e.g., by a notification).
+        if (isExerciseActive()) {
+            stopTimer();
+            startTimer();
         }
     }
 
     //! Called when the view is removed from the screen
     function onHide() {
+        // A notification or system overlay temporarily covered the app — keep
+        // the timer and session alive so onShow() can resume seamlessly.
+        if (isExerciseActive()) {
+            return;
+        }
         stopTimer();
         // Only discard if not in complete state (user hasn't chosen yet)
         if (_state != STATE_COMPLETE) {
